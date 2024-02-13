@@ -7,9 +7,16 @@ let userLocation = {
   latt: 43.03282736873194,
   long: -87.90676045754915,
 };
-// function to render each video, renders different HTML based on user browser
+/**
+ * Renders a video element with different HTML based on the user's browser.
+ * @param {string} src - The URL of the video file.
+ * @param {string} poster - The URL of the video poster image.
+ * @param {string} name - The name of the video.
+ * @returns {string} - HTML code for the video element.
+ */
 const renderVideo = (src, poster, name) => {
   if (window.chrome) {
+    // If the user's browser is Chrome, render the video element with specific attributes
     return `
       <video id="id_${toCamelCase(
         name
@@ -18,6 +25,7 @@ const renderVideo = (src, poster, name) => {
         Your browser does not support HTML5 video.
       </video>`;
   } else {
+    // For other browsers, render the video element with different attributes
     return `
       <video data-src="${src}" id="id_${toCamelCase(
       name
@@ -26,35 +34,50 @@ const renderVideo = (src, poster, name) => {
       </video>`;
   }
 };
-// function to change svg fill when bookmark is clicked
+
+/**
+ * Changes the SVG fill color when the bookmark icon is clicked.
+ * @param {Event} event - The click event object.
+ */
 const changeIconColorBookmark = (event) => {
   const clickedIcon = event.currentTarget.querySelector("#iconBookmark");
   if (clickedIcon.style.fill === "yellow") {
+    // If the fill color is yellow, change it to none and the stroke color to white
     clickedIcon.style.fill = "none";
     clickedIcon.style.stroke = "white";
   } else {
+    // If the fill color is not yellow, change it to yellow and the stroke color to yellow
     clickedIcon.style.fill = "yellow";
     clickedIcon.style.stroke = "yellow";
   }
-  event.stopPropagation(); // Stop
+  event.stopPropagation(); // Stop the event from propagating further
 };
-// function to change svg when heart is clicked
+
+/**
+ * Changes the SVG when the heart icon is clicked.
+ * @param {Event} event - The click event object.
+ */
 const changeIconColorHeart = (event) => {
   const clickedIcon = event.currentTarget;
   if (clickedIcon.classList.contains("clicked")) {
+    // If the heart icon is already clicked, revert it to the original SVG and remove the "clicked" class
     const oldSVG = SVG.heartSVG;
     clickedIcon.innerHTML = oldSVG;
     clickedIcon.classList.remove("clicked");
   } else {
-    // Ako nema klasu "clicked", postavite novi path i dodajte klasu
+    // If the heart icon is not clicked, replace it with a new SVG and add the "clicked" class
     const newSVGContent = SVG.redHearthSVG;
     clickedIcon.innerHTML = newSVGContent;
     clickedIcon.classList.add("clicked");
   }
 
-  event.stopPropagation(); // Stop
+  event.stopPropagation(); // Stop the event from propagating further
 };
-// function to change svg when sound is clicked
+
+/**
+ * Changes the SVG when the sound icon is clicked and toggles the video's muted state.
+ * @param {Event} event - The click event object.
+ */
 const changeIconSound = (event) => {
   const clickedIcon = event.currentTarget;
   const videoId =
@@ -62,20 +85,25 @@ const changeIconSound = (event) => {
   const video = document.getElementById(videoId);
 
   if (clickedIcon.classList.contains("muted")) {
+    // If the video is muted, change the icon to unmuted and unmute the video
     const oldSVG = SVG.soundSVG;
     clickedIcon.innerHTML = oldSVG;
     clickedIcon.classList.remove("muted");
     video.muted = false;
   } else {
+    // If the video is not muted, change the icon to muted and mute the video
     const newSVGContent = mutedSoundSVG;
     clickedIcon.innerHTML = newSVGContent;
     clickedIcon.classList.add("muted");
     video.muted = true;
   }
 
-  event.stopPropagation(); // Stop
+  event.stopPropagation(); // Stop the event from propagating further
 };
-// HTML if there is no results to display
+
+/**
+ * HTML template for displaying a message when there are no search results.
+ */
 const noResultsHTML = `
   <div class="noRestaurant">
     <div class="notFoundImg">
@@ -86,7 +114,14 @@ const noResultsHTML = `
     <p>No restaurants found <br />in this<br /> or check back later for updates.</p>
   </div>
 `;
-// function returns basic restaurant info
+/**
+ * Generates HTML for displaying basic restaurant information.
+ * @param {Object} data - Object containing restaurant information.
+ * @param {string} data.restaurantImage - URL of the restaurant image.
+ * @param {string} data.restaurantName - Name of the restaurant.
+ * @param {string} data.type - Type of the restaurant.
+ * @returns {string} - HTML code for displaying the basic restaurant info.
+ */
 const renderUserInfoHTML = (data) => {
   const HTML = ` 
    <div class="user-info">
@@ -98,7 +133,11 @@ const renderUserInfoHTML = (data) => {
   </div>`;
   return HTML;
 };
-// function returns SVG icons holder DIV
+
+/**
+ * Generates HTML for displaying SVG icons holder DIV.
+ * @returns {string} - HTML code for displaying SVG icons holder DIV.
+ */
 const renderSVGIconsHTML = () => {
   const HTML = ` 
   <div class="icons-overlay">
@@ -128,7 +167,13 @@ const renderSVGIconsHTML = () => {
   </div>`;
   return HTML;
 };
-// function returns detailed restaurant info and calculated distance between user and restaurant location
+
+/**
+ * Generates HTML for displaying detailed restaurant info and calculated distance between user and restaurant location.
+ * @param {Object} restaurant - Object containing restaurant information.
+ * @param {{ latt: number, long: number }} location - Object containing user's latitude and longitude coordinates.
+ * @returns {string} - HTML code for displaying detailed restaurant info and calculated distance.
+ */
 const renderDescription = (restaurant, location) => {
   const HTML = `
   <div class="map-info">
@@ -145,7 +190,12 @@ const renderDescription = (restaurant, location) => {
   </div>`;
   return HTML;
 };
-// functions returns entire video component restaurant user info, video, SVGs icons, restaurant detailed info
+
+/**
+ * Generates HTML code for displaying the entire video component including restaurant user info, video, SVG icons, and detailed restaurant info.
+ * @param {Object} restaurant - Object containing restaurant information.
+ * @returns {string} - HTML code for displaying the entire video component.
+ */
 const videoHTML = (restaurant) => {
   const HTML = `
     ${renderUserInfoHTML(restaurant)}
@@ -167,8 +217,13 @@ const videoHTML = (restaurant) => {
   `;
   return HTML;
 };
-// function attach event listeners for the single video
-// gives functionality to the SVGs icons
+
+/**
+ * Attaches event listeners to the SVG icons within the video wrapper element.
+ * Provides functionality to the SVG icons.
+ * @param {HTMLElement} videoWrapper - The wrapper element containing the video and SVG icons.
+ * @param {Object} restaurant - The restaurant data associated with the video.
+ */
 const attachEventListeners = (videoWrapper, restaurant) => {
   const bookmark = videoWrapper.querySelector(".bookmark");
   const planet = videoWrapper.querySelector(".planet");
@@ -188,19 +243,27 @@ const attachEventListeners = (videoWrapper, restaurant) => {
     goToWebPage(restaurant.website);
   });
 };
-// userLocation setter
+
+/**
+ * Sets the user's location.
+ * @param {{ latt: number, long: number }} data - Object containing the user's latitude and longitude coordinates.
+ */
 export const locationSetter = (data) => {
   userLocation = data;
 };
-// * CORE FUNCTIONALITY OF THE MODULE
-// function renders all results based on the user input
+
+/**
+ * Renders all results based on the user input.
+ * @param {Array} displayResults - Array of restaurant data to be displayed.
+ * @param {HTMLElement} container - Container element where the results will be rendered.
+ */
 export const renderResults = (displayResults, container) => {
   // On every new render first reset container
   container.innerHTML = ``;
   if (displayResults.length === 0) {
     container.innerHTML += noResultsHTML;
   } else {
-    // shuffle results and than foreach create single video item
+    // shuffle results and then for each create single video item
     shuffleArray(displayResults).forEach((restaurant) => {
       const videoWrapper = document.createElement("div");
       videoWrapper.classList.add("video-wrapper");

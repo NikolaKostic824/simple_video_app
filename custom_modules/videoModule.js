@@ -1,4 +1,8 @@
-// function to check if video is in viewport
+/**
+ * Checks if the given element is in the viewport.
+ * @param {HTMLElement} el - The element to check.
+ * @returns {boolean} - Returns true if the element is in the viewport, false otherwise.
+ */
 const isElementInViewport = (el) => {
   const rect = el.getBoundingClientRect();
   return (
@@ -9,12 +13,18 @@ const isElementInViewport = (el) => {
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 };
-// function to pause all video is users opens new tab from the app
+
+/**
+ * Pauses all videos if the user opens a new tab from the app.
+ */
 export const onNewTabOpenPauseVideo = () => {
   const videos = document.querySelectorAll("video");
   videos.forEach((video) => video.pause());
 };
-// * listener for scroll
+
+/**
+ * Listener for scroll events to handle video autoplay.
+ */
 export const videoScroll = () => {
   if (document.querySelectorAll("video[autoplay]").length > 0) {
     let windowHeight = window.innerHeight,
@@ -38,7 +48,9 @@ export const videoScroll = () => {
   }
 };
 
-// lazy load video and auto play if video is viewport
+/**
+ * Lazy loads and auto plays videos if they are in the viewport.
+ */
 export const lazyLoadAndAutoPlayVideo = () => {
   const videos = document.querySelectorAll("video[data-src]");
   videos.forEach((video) => {

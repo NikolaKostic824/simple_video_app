@@ -1,37 +1,37 @@
-// timer related variables
+// Timer related variables
 let typingTimer;
 const doneTypingInterval = 500; // 500ms
 
-// typing Timer after certain amount of time update result list and re-render
+/**
+ * Sets up a timer for handling search input. After a certain amount of time, updates the result list and re-renders it.
+ * @param {Array} data - Array of restaurant data to be searched.
+ * @param {Function} renderFnc - Function to render the search results.
+ * @param {HTMLElement} container - Container element where the results will be rendered.
+ */
 export const setupSearchTimer = (data, renderFnc, container) => {
   document.getElementById("search_input").addEventListener("input", () => {
-    console.log("RUUUN");
     clearTimeout(typingTimer);
-    typingTimer = setTimeout(
-      async () => {
-        console.log(data);
-        const displayResults = await searchRestaurants(data);
-        renderFnc(displayResults, container);
-      },
-
-      doneTypingInterval
-    );
+    typingTimer = setTimeout(async () => {
+      const displayResults = await searchRestaurants(data);
+      renderFnc(displayResults, container);
+    }, doneTypingInterval);
   });
 };
-// function uses user input and returns data to display
+
+/**
+ * Uses user input to filter restaurant data and returns the filtered results.
+ * @param {Array} data - Array of restaurant data to be filtered.
+ * @returns {Array} - Filtered array of restaurant data based on the user input.
+ */
 export const searchRestaurants = async (data) => {
-  // Get Search input
+  // Get search input
   const searchInput = document.getElementById("search_input").value;
   let displayResults = [];
-  // Restaurant results after location search
-  if (searchInput != "") {
-    // filter all data in order to display correct results
+  // Filter data based on the search input
+  if (searchInput !== "") {
     displayResults = data.filter((restaurant) =>
       restaurant.city.toLowerCase().includes(searchInput.toLowerCase())
     );
-  } else {
-    // if user input is empty return data
-    displayResults = [];
   }
   return displayResults;
 };
